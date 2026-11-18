@@ -1,0 +1,1693 @@
+{
+  "name": "LeadQualification",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "61f1304c-7f23-4811-bdef-3dc266e6fcf6",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -1936,
+        -128
+      ],
+      "id": "a170a1cf-8d38-4f2e-a45d-0b017c6f4b6c",
+      "name": "Webhook",
+      "webhookId": "61f1304c-7f23-4811-bdef-3dc266e6fcf6"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "af0b070b-6423-46a2-a142-832e03297879",
+              "name": "Client_name",
+              "value": "={{ $json.body.name }}",
+              "type": "string"
+            },
+            {
+              "id": "6c8138f3-efbb-41d0-9496-a890b92b949d",
+              "name": "Client_e-mail",
+              "value": "={{ $json.body.email }}",
+              "type": "string"
+            },
+            {
+              "id": "36d9cb21-b34e-4b1a-82d0-8c1cf3ce2b0e",
+              "name": "Client_phone",
+              "value": "={{ $json.body.phone }}",
+              "type": "string"
+            },
+            {
+              "id": "09d6c806-f441-494f-980c-ebad06ceecea",
+              "name": "Client_preference",
+              "value": "={{ $json.body.preferred_schedule }}",
+              "type": "string"
+            },
+            {
+              "id": "1671f779-adaf-496e-859c-5a56bf0a0517",
+              "name": "Client_Budget",
+              "value": "={{ $json.body.budget }}",
+              "type": "string"
+            },
+            {
+              "id": "93e5a156-7f52-4633-ae62-f817183fc462",
+              "name": "enrollment_intent",
+              "value": "={{ $json.body.enrollment_intent }}",
+              "type": "string"
+            },
+            {
+              "id": "03f3453b-a277-4793-9ce8-6feda48dd340",
+              "name": "Course_Name",
+              "value": "={{ $json.body.course_name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        -1712,
+        -128
+      ],
+      "id": "c065088a-c7f0-404d-ab25-90c53e36f6c7",
+      "name": "Configurations"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "4eea5824-ac07-4489-938f-87ca1993da55",
+              "leftValue": "={{ $json['Client_e-mail'] }}",
+              "rightValue": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
+              "operator": {
+                "type": "string",
+                "operation": "regex"
+              }
+            },
+            {
+              "id": "a8f1e876-da61-4973-b874-f8d960bdbfbf",
+              "leftValue": "={{ $json.Client_phone }}",
+              "rightValue": "^\\+?[0-9][0-9\\s()-]{8,18}[0-9]$",
+              "operator": {
+                "type": "string",
+                "operation": "regex"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -1488,
+        -128
+      ],
+      "id": "b0ca2801-3d6b-4cd1-a505-4ae1eff2cf39",
+      "name": "validityCheck"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1FyDHw0rxuc9upKUQuOnTIjcWw3ud5IueCREqu2UfPq4",
+          "mode": "list",
+          "cachedResultName": "leads",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FyDHw0rxuc9upKUQuOnTIjcWw3ud5IueCREqu2UfPq4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 229609685,
+          "mode": "list",
+          "cachedResultName": "Sheet2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FyDHw0rxuc9upKUQuOnTIjcWw3ud5IueCREqu2UfPq4/edit#gid=229609685"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "e-mail",
+              "lookupValue": "={{ $('Configurations').item.json['Client_e-mail'] }}"
+            },
+            {
+              "lookupColumn": "Phone",
+              "lookupValue": "={{ $('Configurations').item.json.Client_phone }}"
+            }
+          ]
+        },
+        "combineFilters": "OR",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1264,
+        -224
+      ],
+      "id": "dc3f5815-2b40-4cad-bff9-c0c5af74bc7a",
+      "name": "GetRowDupCheck",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "dzKk6o1RZ9L9ObYh",
+          "name": "AWS_cred"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "e622a68c-c76a-44ae-906b-273b8cbf66cb",
+              "leftValue": "={{ $json['e-mail'] }}",
+              "rightValue": "={{ $('Configurations').item.json['Client_e-mail'] }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "716defb5-84bd-478b-82a3-29b634ce4751",
+              "leftValue": "={{ $json.Phone }}",
+              "rightValue": "={{ $('Configurations').item.json.Client_phone }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": "={{ true }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -1040,
+        -224
+      ],
+      "id": "6e055033-ea7b-4093-817c-b89d367dbab1",
+      "name": "dupCheck"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=budget {{ $('Configurations').item.json.Client_Budget }}\n\n{{ $('Configurations').item.json.enrollment_intent }}",
+        "options": {
+          "systemMessage": "You are an intent classification assistant \nYour role is to classify user intent to decide if the user is hot or warm or cold \nIf they are ready to enrol and start they are hot \nif they need more info then warm \nif just exploring and asking about prices then cold\n\nmake the output as parametrized json with lead classification and qualification status as \"pending human review\"\n\n{ \"lead_classification\": ,\n\"Qualification_Status\": \"pending human review\"}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        672,
+        -128
+      ],
+      "id": "64f8a6ee-412d-46f3-86e3-29a971bb21f4",
+      "name": "AI Agent",
+      "executeOnce": true,
+      "retryOnFail": true,
+      "alwaysOutputData": false,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-5",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        512,
+        480
+      ],
+      "id": "31c2d7aa-2b72-4a40-a3d9-283e55503b0f",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "yZ3ew0g647vSFIbz",
+          "name": "OpenRouteraccountSep26"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -240,
+        -224
+      ],
+      "id": "fef0bf8f-ca80-4df6-8264-34c9a6186739",
+      "name": "No Operation, do nothing",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n  item.json.output = JSON.parse(item.json.output);\n  return item;\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1008,
+        -224
+      ],
+      "id": "190c280c-58e8-46f3-89a2-71228fa4a1e8",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1FyDHw0rxuc9upKUQuOnTIjcWw3ud5IueCREqu2UfPq4",
+          "mode": "list",
+          "cachedResultName": "leads",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FyDHw0rxuc9upKUQuOnTIjcWw3ud5IueCREqu2UfPq4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 229609685,
+          "mode": "list",
+          "cachedResultName": "Sheet2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FyDHw0rxuc9upKUQuOnTIjcWw3ud5IueCREqu2UfPq4/edit#gid=229609685"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ClientName": "={{ $('Configurations').item.json.Client_name }}",
+            "Phone": "={{ $('Configurations').item.json.Client_phone }}",
+            "e-mail": "={{ $('Configurations').item.json['Client_e-mail'] }}",
+            "Potential duplication": "No",
+            "Course Name": "={{ $('Configurations').item.json.Course_Name }}",
+            "Preferred Schedule": "={{ $('Configurations').item.json.Client_preference }}",
+            "budget": "={{ $('Configurations').item.json.Client_Budget }}",
+            "Enrollment Intent": "={{ $('Configurations').item.json.enrollment_intent }}",
+            "Qualification status": "pending AI classification"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "ClientName",
+              "displayName": "ClientName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "e-mail",
+              "displayName": "e-mail",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Course Name",
+              "displayName": "Course Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Preferred Schedule",
+              "displayName": "Preferred Schedule",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "budget",
+              "displayName": "budget",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Enrollment Intent",
+              "displayName": "Enrollment Intent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Lead classification",
+              "displayName": "Lead classification",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Qualification status",
+              "displayName": "Qualification status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Potential duplication",
+              "displayName": "Potential duplication",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -16,
+        -32
+      ],
+      "id": "a12f506b-a569-4d4c-88da-27c1695a2c7f",
+      "name": "addLead",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "dzKk6o1RZ9L9ObYh",
+          "name": "AWS_cred"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "hadeerahmad.automation@gmail.com",
+        "subject": "New Lead",
+        "message": "=\n<div style=\"font-family: Arial, sans-serif; color: #333; max-width: 600px; line-height: 1.6;\">\n\n  <h2 style=\"color: #2874a6;\">New Lead Received</h2>\n\n  <p>Hello Sales Team,</p>\n\n  <p>\n    A new lead is pending human review. Please find the submitted details below.\n  </p>\n\n  <table style=\"width: 100%; border-collapse: collapse; margin-top: 16px;\">\n    <tr>\n      <td style=\"padding: 10px; border-bottom: 1px solid #ddd;\"><strong>Name</strong></td>\n      <td style=\"padding: 10px; border-bottom: 1px solid #ddd;\">{{ $('Configurations').item.json.Client_name }}</td>\n    </tr>\n    <tr>\n      <td style=\"padding: 10px; border-bottom: 1px solid #ddd;\"><strong>Email</strong></td>\n      <td style=\"padding: 10px; border-bottom: 1px solid #ddd;\">{{ $('Configurations').item.json['Client_e-mail'] }}</td>\n    </tr>\n    <tr>\n      <td style=\"padding: 10px; border-bottom: 1px solid #ddd;\"><strong>Phone</strong></td>\n      <td style=\"padding: 10px; border-bottom: 1px solid #ddd;\">{{ $('Configurations').item.json.Client_phone }}</td>\n    </tr>\n    <tr>\n      <td style=\"padding: 10px; border-bottom: 1px solid #ddd;\"><strong>Preferred Schedule</strong></td>\n      <td style=\"padding: 10px; border-bottom: 1px solid #ddd;\">{{ $('Configurations').item.json.Client_preference }}</td>\n    </tr>\n    <tr>\n      <td style=\"padding: 10px; border-bottom: 1px solid #ddd;\"><strong>Budget</strong></td>\n      <td style=\"padding: 10px; border-bottom: 1px solid #ddd;\">{{ $('Configurations').item.json.Client_Budget }}</td>\n    </tr>\n    <tr>\n      <td style=\"padding: 10px; border-bottom: 1px solid #ddd;\"><strong>Enrollment Intent</strong></td>\n      <td style=\"padding: 10px; border-bottom: 1px solid #ddd;\">{{ $('Configurations').item.json.enrollment_intent }}</td>\n    </tr>\n  </table>\n\n  <p style=\"margin-top: 20px; padding: 12px; background-color: #eaf2f8; border-radius: 4px;\">\n    <strong>Review Required:</strong> Please review the lead and confirm or adjust the AI-recommended qualification.\n  </p>\n\n  <p>Best regards,<br>Lead Management System</p>\n\n</div>\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        2352,
+        -224
+      ],
+      "id": "093b6637-9458-4d93-954f-eb088df6214e",
+      "name": "Send a message",
+      "webhookId": "d283112c-5c83-4557-ab2e-1cdf4cc40872",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "OArywMKOcbKvdgip",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -240,
+        -32
+      ],
+      "id": "3a12682a-25d9-4798-87f4-beaf6b47fc6f",
+      "name": "No Operation, do nothing1",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1FyDHw0rxuc9upKUQuOnTIjcWw3ud5IueCREqu2UfPq4",
+          "mode": "list",
+          "cachedResultName": "leads",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FyDHw0rxuc9upKUQuOnTIjcWw3ud5IueCREqu2UfPq4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 229609685,
+          "mode": "list",
+          "cachedResultName": "Sheet2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FyDHw0rxuc9upKUQuOnTIjcWw3ud5IueCREqu2UfPq4/edit#gid=229609685"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ClientName": "={{ $('Configurations').item.json.Client_name }}",
+            "Phone": "={{ $('Configurations').item.json.Client_phone }}",
+            "e-mail": "={{ $('Configurations').item.json['Client_e-mail'] }}",
+            "Potential duplication": "Yes",
+            "Preferred Schedule": "={{ $('Configurations').item.json.Client_preference }}",
+            "budget": "={{ $('Configurations').item.json.Client_Budget }}",
+            "Enrollment Intent": "={{ $('Configurations').item.json.enrollment_intent }}",
+            "Course Name": "={{ $('Configurations').item.json.Course_Name }}",
+            "Qualification status": "pending AI classification"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "ClientName",
+              "displayName": "ClientName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "e-mail",
+              "displayName": "e-mail",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Course Name",
+              "displayName": "Course Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Preferred Schedule",
+              "displayName": "Preferred Schedule",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "budget",
+              "displayName": "budget",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Enrollment Intent",
+              "displayName": "Enrollment Intent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Lead classification",
+              "displayName": "Lead classification",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Qualification status",
+              "displayName": "Qualification status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Potential duplication",
+              "displayName": "Potential duplication",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -16,
+        -224
+      ],
+      "id": "456f08f2-bee5-4ecc-b273-6aabef6c7d1e",
+      "name": "addLeadWithDupflag",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "dzKk6o1RZ9L9ObYh",
+          "name": "AWS_cred"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "e622a68c-c76a-44ae-906b-273b8cbf66cb",
+              "leftValue": "={{ $json['e-mail'] }}",
+              "rightValue": "={{ $('Configurations').item.json['Client_e-mail'] }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "716defb5-84bd-478b-82a3-29b634ce4751",
+              "leftValue": "={{ $json.Phone }}",
+              "rightValue": "={{ $('Configurations').item.json.Client_phone }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "looseTypeValidation": "={{ true }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -816,
+        -128
+      ],
+      "id": "f5345ac8-ca01-4759-9eb1-f5a2cb52a692",
+      "name": "dupCheck1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c3bf92b2-5c6c-42d4-a062-9c25bd8b0403",
+              "name": "addedE-mail",
+              "value": "={{ $('addLead').item.json['e-mail'] }}",
+              "type": "string"
+            },
+            {
+              "id": "8bddf647-370f-4ed9-b1de-677cc6f0ceaa",
+              "name": "addedPhone",
+              "value": "={{ $('addLead').item.json.Phone }}",
+              "type": "string"
+            },
+            {
+              "id": "089a6856-db60-4b06-a1dc-d2ba6bd9d805",
+              "name": "duplicate",
+              "value": false,
+              "type": "boolean"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        208,
+        -32
+      ],
+      "id": "e2c3fb50-958b-41b7-b402-bbdcbf6fa0e2",
+      "name": "addedDataNoflag"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "Wrong data",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {}
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -1264,
+        -32
+      ],
+      "id": "85c0704b-ac9b-4053-b3ff-f8bc59288cf2",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1FyDHw0rxuc9upKUQuOnTIjcWw3ud5IueCREqu2UfPq4",
+          "mode": "list",
+          "cachedResultName": "leads",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FyDHw0rxuc9upKUQuOnTIjcWw3ud5IueCREqu2UfPq4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 229609685,
+          "mode": "list",
+          "cachedResultName": "Sheet2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FyDHw0rxuc9upKUQuOnTIjcWw3ud5IueCREqu2UfPq4/edit#gid=229609685"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Lead classification": "={{ $('Code in JavaScript').item.json.output.lead_classification }}",
+            "Qualification status": "={{ $('Code in JavaScript').item.json.output.Qualification_Status }}",
+            "row_number": "={{ $json.row_number }}"
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "ClientName",
+              "displayName": "ClientName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "e-mail",
+              "displayName": "e-mail",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Lead classification",
+              "displayName": "Lead classification",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Qualification status",
+              "displayName": "Qualification status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2128,
+        -224
+      ],
+      "id": "1c90b8b2-10d7-4800-88d5-b4a08471d5b1",
+      "name": "LeadUpdate",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "dzKk6o1RZ9L9ObYh",
+          "name": "AWS_cred"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1FyDHw0rxuc9upKUQuOnTIjcWw3ud5IueCREqu2UfPq4",
+          "mode": "list",
+          "cachedResultName": "leads",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FyDHw0rxuc9upKUQuOnTIjcWw3ud5IueCREqu2UfPq4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 229609685,
+          "mode": "list",
+          "cachedResultName": "Sheet2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FyDHw0rxuc9upKUQuOnTIjcWw3ud5IueCREqu2UfPq4/edit#gid=229609685"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "e-mail",
+              "lookupValue": "={{ $json[\"LockUpE-mail\"] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1728,
+        -224
+      ],
+      "id": "48db21f8-c9c6-4b58-ad41-eb79d3e6b159",
+      "name": "GetRows",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "dzKk6o1RZ9L9ObYh",
+          "name": "AWS_cred"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nvar len=$input.all().length;\n\nreturn $input.all()[len-1];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1904,
+        -224
+      ],
+      "id": "b1435f65-f71a-4ce9-8ff1-54f0e87d4add",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "sendTo": "hadeerahmad.automation@gmail.com",
+        "subject": "Action Required – AI Lead Qualification Failed",
+        "message": "=\n<div style=\"font-family: Arial, sans-serif; color: #333; max-width: 600px; line-height: 1.6;\">\n\n  <h2 style=\"color: #c0392b;\">AI Qualification Failed</h2>\n\n  <p>Hello Sales Team,</p>\n\n  <p>\n    The AI failed to classify the following lead.\n    Please review the details and assign a qualification category manually.\n  </p>\n\n  <table style=\"width: 100%; border-collapse: collapse; margin-top: 16px;\">\n    <tr>\n      <td style=\"padding: 10px; border-bottom: 1px solid #ddd;\"><strong>Name</strong></td>\n      <td style=\"padding: 10px; border-bottom: 1px solid #ddd;\">{{ $('Configurations').item.json.Client_name }}</td>\n    </tr>\n    <tr>\n      <td style=\"padding: 10px; border-bottom: 1px solid #ddd;\"><strong>Email</strong></td>\n      <td style=\"padding: 10px; border-bottom: 1px solid #ddd;\">{{ $('Configurations').item.json['Client_e-mail'] }}</td>\n    </tr>\n    <tr>\n      <td style=\"padding: 10px; border-bottom: 1px solid #ddd;\"><strong>Phone</strong></td>\n      <td style=\"padding: 10px; border-bottom: 1px solid #ddd;\">{{ $('Configurations').item.json.Client_phone }}</td>\n    </tr>\n    <tr>\n      <td style=\"padding: 10px; border-bottom: 1px solid #ddd;\"><strong>Preferred Schedule</strong></td>\n      <td style=\"padding: 10px; border-bottom: 1px solid #ddd;\">{{ $('Configurations').item.json.Client_preference }}</td>\n    </tr>\n    <tr>\n      <td style=\"padding: 10px; border-bottom: 1px solid #ddd;\"><strong>Budget</strong></td>\n      <td style=\"padding: 10px; border-bottom: 1px solid #ddd;\">{{ $('Configurations').item.json.Client_Budget }}</td>\n    </tr>\n    <tr>\n      <td style=\"padding: 10px; border-bottom: 1px solid #ddd;\"><strong>Enrollment Intent</strong></td>\n      <td style=\"padding: 10px; border-bottom: 1px solid #ddd;\">{{ $('Configurations').item.json.enrollment_intent }}</td>\n    </tr>\n  </table>\n\n  <p style=\"margin-top: 20px; padding: 12px; background-color: #fff3cd; border-radius: 4px;\">\n    <strong>Required Action:</strong> Please review this lead and complete the qualification manually.\n  </p>\n\n  <p>Best regards,<br>Lead Management System</p>\n\n</div>\n\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        2560,
+        256
+      ],
+      "id": "d9a94f21-d0eb-4f13-a730-6672648be127",
+      "name": "Send a message1",
+      "webhookId": "d283112c-5c83-4557-ab2e-1cdf4cc40872",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "OArywMKOcbKvdgip",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "already registered",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {}
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -816,
+        -320
+      ],
+      "id": "06345cce-fb67-4103-bcc5-1eeed01de2b0",
+      "name": "Respond to Webhook1"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "submission done",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {}
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2576,
+        -224
+      ],
+      "id": "6e36488b-cc9c-47a7-afa4-ab68c86c540f",
+      "name": "Respond to Webhook2"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "submission done",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {}
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2896,
+        256
+      ],
+      "id": "0c7f4e39-64da-48c3-b825-358f62e4174d",
+      "name": "Respond to Webhook3"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c3bf92b2-5c6c-42d4-a062-9c25bd8b0403",
+              "name": "addedE-mail",
+              "value": "={{ $('addLeadWithDupflag').item.json['e-mail'] }}",
+              "type": "string"
+            },
+            {
+              "id": "8bddf647-370f-4ed9-b1de-677cc6f0ceaa",
+              "name": "addedPhone",
+              "value": "={{ $('addLeadWithDupflag').item.json.Phone }}",
+              "type": "string"
+            },
+            {
+              "id": "bc9cc344-c379-4dd0-beb5-a88498fa2e44",
+              "name": "duplicate",
+              "value": true,
+              "type": "boolean"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        208,
+        -224
+      ],
+      "id": "946bccce-ac73-4022-8714-ca26d900307b",
+      "name": "addedDataflag"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "bfc6843f-fb2a-4e26-87c6-265c4bfd0c4c",
+              "leftValue": "={{ $('duplicate?').item.json.duplicate }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1232,
+        -224
+      ],
+      "id": "3d8288fa-e0ff-4606-8f8b-1a8c4033688f",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c3bf92b2-5c6c-42d4-a062-9c25bd8b0403",
+              "name": "LockUpE-mail",
+              "value": "={{ $('addLeadWithDupflag').item.json['e-mail'] }}",
+              "type": "string"
+            },
+            {
+              "id": "8bddf647-370f-4ed9-b1de-677cc6f0ceaa",
+              "name": "LockUpPhone",
+              "value": "={{ $('addLeadWithDupflag').item.json.Phone }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        1456,
+        -320
+      ],
+      "id": "71b92d31-381d-4d12-b64a-530e11a01bd8",
+      "name": "lockupWhenDup"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c3bf92b2-5c6c-42d4-a062-9c25bd8b0403",
+              "name": "LockUpE-mail",
+              "value": "={{ $('addLead').item.json['e-mail'] }}",
+              "type": "string"
+            },
+            {
+              "id": "8bddf647-370f-4ed9-b1de-677cc6f0ceaa",
+              "name": "LockUpPhone",
+              "value": "={{ $('addLead').item.json.Phone }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        1456,
+        -128
+      ],
+      "id": "981b3d6b-db31-4669-a2a7-c5a62b0fa46c",
+      "name": "lockupNoDup"
+    },
+    {
+      "parameters": {
+        "includeOtherFields": true,
+        "include": "selected",
+        "includeFields": "duplicate",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        448,
+        -128
+      ],
+      "id": "87af9f53-88d1-4997-b9e3-d014f1db8fb9",
+      "name": "duplicate?"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1FyDHw0rxuc9upKUQuOnTIjcWw3ud5IueCREqu2UfPq4",
+          "mode": "list",
+          "cachedResultName": "leads",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FyDHw0rxuc9upKUQuOnTIjcWw3ud5IueCREqu2UfPq4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 229609685,
+          "mode": "list",
+          "cachedResultName": "Sheet2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FyDHw0rxuc9upKUQuOnTIjcWw3ud5IueCREqu2UfPq4/edit#gid=229609685"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Qualification status": "=AI failed",
+            "row_number": "={{ $json.row_number }}"
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "ClientName",
+              "displayName": "ClientName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "e-mail",
+              "displayName": "e-mail",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Course Name",
+              "displayName": "Course Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Preferred Schedule",
+              "displayName": "Preferred Schedule",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "budget",
+              "displayName": "budget",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Enrollment Intent",
+              "displayName": "Enrollment Intent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Lead classification",
+              "displayName": "Lead classification",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Qualification status",
+              "displayName": "Qualification status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Potential duplication",
+              "displayName": "Potential duplication",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2256,
+        288
+      ],
+      "id": "d62f7462-b7f4-45a3-b5f4-6b8a1b2df2db",
+      "name": "LeadUpdate1",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "dzKk6o1RZ9L9ObYh",
+          "name": "AWS_cred"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nvar len=$input.all().length;\n\nreturn $input.all()[len-1];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2032,
+        288
+      ],
+      "id": "badc4db1-d7fb-4716-b0d3-4854d1dfed53",
+      "name": "Code in JavaScript2"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1FyDHw0rxuc9upKUQuOnTIjcWw3ud5IueCREqu2UfPq4",
+          "mode": "list",
+          "cachedResultName": "leads",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FyDHw0rxuc9upKUQuOnTIjcWw3ud5IueCREqu2UfPq4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 229609685,
+          "mode": "list",
+          "cachedResultName": "Sheet2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1FyDHw0rxuc9upKUQuOnTIjcWw3ud5IueCREqu2UfPq4/edit#gid=229609685"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "e-mail",
+              "lookupValue": "={{ $('Configurations').item.json[\"Client_e-mail\"] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1248,
+        320
+      ],
+      "id": "d22ec37f-bf37-4638-aa24-894eb9ba3e01",
+      "name": "GetRows1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "dzKk6o1RZ9L9ObYh",
+          "name": "AWS_cred"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "addLead": [
+      {
+        "json": {
+          "ClientName": "n8nflow.click",
+          "Phone": "098767865757",
+          "e-mail": "hadeer.freelancertranslator@gmail.com",
+          "Potential duplication": "No",
+          "Course Name": "Web Development",
+          "Preferred Schedule": "Weekday mornings",
+          "budget": "Under 2,000 EGP",
+          "Enrollment Intent": "Interested, need more information",
+          "Qualification status": "pending AI classification"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Configurations",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Configurations": {
+      "main": [
+        [
+          {
+            "node": "validityCheck",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "validityCheck": {
+      "main": [
+        [
+          {
+            "node": "GetRowDupCheck",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GetRowDupCheck": {
+      "main": [
+        [
+          {
+            "node": "dupCheck",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "dupCheck": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "dupCheck1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "GetRows1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "No Operation, do nothing": {
+      "main": [
+        [
+          {
+            "node": "addLeadWithDupflag",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "addLead": {
+      "main": [
+        [
+          {
+            "node": "addedDataNoflag",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "No Operation, do nothing1": {
+      "main": [
+        [
+          {
+            "node": "addLead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "addLeadWithDupflag": {
+      "main": [
+        [
+          {
+            "node": "addedDataflag",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "dupCheck1": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "addedDataNoflag": {
+      "main": [
+        [
+          {
+            "node": "duplicate?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LeadUpdate": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GetRows": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "LeadUpdate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "addedDataflag": {
+      "main": [
+        [
+          {
+            "node": "duplicate?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "lockupWhenDup",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "lockupNoDup",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "lockupWhenDup": {
+      "main": [
+        [
+          {
+            "node": "GetRows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "lockupNoDup": {
+      "main": [
+        [
+          {
+            "node": "GetRows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "duplicate?": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript2": {
+      "main": [
+        [
+          {
+            "node": "LeadUpdate1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LeadUpdate1": {
+      "main": [
+        [
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GetRows1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "8208615e-8133-4b33-a8c6-6ca4fb671b4b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3e6b29054a1dcf56ed39cbda5f6b1a3a28d21b9a46c98d742f6a565fcbe4dfb4"
+  },
+  "nodeGroups": [],
+  "id": "yxk091UX2pHeoPll",
+  "tags": []
+}
